@@ -1,6 +1,8 @@
 from tkinter.ttk import Frame, Button, Entry, Label, Style
 from tkinter import Tk, LEFT, RIGHT, TOP, BOTTOM, X, StringVar, W, END, Toplevel
 
+# CRUD = Create, Read, Update, Delete
+
 registry = []
 i = 0
 
@@ -38,6 +40,15 @@ def delete_entry_browse_text():
     entry_work_address_browse.delete(0, END)
 
 
+def disable_entry_browse():
+    entry_name_browse.state(['readonly'])
+    entry_lastname_browse.state(['readonly'])
+    entry_home_email_browse.state(['readonly'])
+    entry_work_email_browse.state(['readonly'])
+    entry_home_address_browse.state(['readonly'])
+    entry_work_address_browse.state(['readonly'])
+
+
 def save_record():
     # Obtener la información de los widgets de entrada y colocarla en la estructura de datos
     registry.append(
@@ -70,7 +81,10 @@ def save_record_at():
             'work': entry_work_address_browse.get()
         }
     }
-    print(registry)
+    disable_entry_browse()
+    btn_modify_record.configure(
+        text='Modificar registro', command=modify_record)
+    # print(registry)
 
 
 def show_records():
@@ -90,12 +104,7 @@ def show_records():
     entry_home_address_browse.insert(0, registry[i]['addresses']['home'])
     entry_work_address_browse.insert(0, registry[i]['addresses']['work'])
 
-    entry_name_browse.state(['readonly'])
-    entry_lastname_browse.state(['readonly'])
-    entry_home_email_browse.state(['readonly'])
-    entry_work_email_browse.state(['readonly'])
-    entry_home_address_browse.state(['readonly'])
-    entry_work_address_browse.state(['readonly'])
+    disable_entry_browse()
 
 
 def modify_record():
@@ -116,9 +125,10 @@ def show_prev():
     i -= 1  # i = i-1
     if i == 0:
         btn_prev.pack_forget()
-        btn_next.pack(side=LEFT, expand=1)
     else:
         btn_prev.pack(side=LEFT, expand=1)
+
+    btn_next.pack(side=LEFT, expand=1)
     show_records()
 
 
@@ -127,11 +137,10 @@ def show_next():
     print('pa\'delante')
     # len(registry)<len(registry)+1 # cuando no hemos rebasado el último registro de la lista
     i += 1  # i = i+1
+    btn_prev.pack(side=LEFT, expand=1, before=btn_next)
     if i == len(registry) - 1:  # Cuando estamos en el último registro de la lista
         btn_next.pack_forget()
     show_records()
-
-    btn_prev.pack(side=LEFT, expand=1)
 
 
 def close_browse_window():
