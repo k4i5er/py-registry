@@ -143,10 +143,46 @@ def show_next():
     show_records()
 
 
-def close_browse_window():
+def delete_record():
     global i
-    browse_window.destroy()
-    i = 0
+    print(f'You\'ve been choosen for deletion! Record {i+1}')
+    print(registry)
+    # len(regsitry) -> 2
+    # i -> 1 cuando estoy en el último registro
+    # registry.pop(i) elimina la posición 2 de mi lista
+    # show_records() tratará de mostrar los datos de la posición 2 de la lista (índice 1)
+    # registry[0]
+    # registry[1] <-- Lo quiero borrar
+    # registry[2]
+    # registry[3]
+    # i -> 1 es el índice del registro visualizado
+    registry.pop(i)
+    # registry[0]
+    # registry[1] (antes 2)
+    # registry[2] (antes 3)
+
+    # registry[0]
+    # registry[1] <-- quiero elimiarlo
+    # i -> 1 es el índice del registro visualizado
+    # registry.pop(i)
+    # registry[0] <-- me debe mostrar este registro
+    # ¿qué debe suceder con i?
+    # Solución: ajustar a i
+    # i -> len(registry)-1
+
+    if i > len(registry) - 1:
+        i = len(registry)-1
+
+    print(registry)
+    if len(registry) > 0:
+        show_records()
+    elif len(registry) == 0:
+        browse_window.destroy()
+
+    if i == len(registry) - 1:
+        btn_next.pack_forget()
+    if len(registry) == 1:
+        btn_prev.pack_forget()
 
 
 def browse_records_window():
@@ -160,6 +196,7 @@ def browse_records_window():
     global btn_prev
     global btn_next
     global browse_window
+    global i
 
     browse_window = Toplevel(root)
     browse_window.title('Consulta de registros - Registro de participantes')
@@ -234,12 +271,16 @@ def browse_records_window():
     btn_modify_record = Button(
         frm_modify, text='Modificar registro', command=modify_record)
     btn_modify_record.pack(side=LEFT, expand=1)
-    Button(frm_modify, text='Regresar', command=close_browse_window).pack(
+    btn_delete_record = Button(
+        frm_modify, text='Eliminar registro', command=delete_record)
+    btn_delete_record.pack(side=LEFT, expand=1)
+    Button(frm_modify, text='Regresar', command=browse_window.destroy).pack(
         side=LEFT, expand=1)
     frm_modify.pack(fill=X)
 
     frm_buttons.pack(fill=X)
-
+    print(f'i >>>>>>> {i}')
+    i = 0
     show_records()
 
 
